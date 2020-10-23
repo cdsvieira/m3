@@ -1,6 +1,6 @@
 ---
 linktitle: "Kubernetes"
-weight: 2
+weight: 1
 ---
 
 # Creating an M3 Cluster with Kubernetes
