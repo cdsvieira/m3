@@ -1,4 +1,4 @@
-// Copyright (c) 2018 Uber Technologies, Inc.
+// Copyright (c) 2020 Uber Technologies, Inc.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,18 +18,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package handler
+package resources
 
-// HeaderKeyType is the type for the header key.
-type HeaderKeyType int
+type dockerImage struct {
+	name string
+	tag  string
+}
 
-const (
-	// HeaderKey is the key which headers will be added to in the request context.
-	HeaderKey HeaderKeyType = iota
+type setupOptions struct {
+	dbNodeImage      dockerImage
+	coordinatorImage dockerImage
+}
 
-	// RoutePrefixV1 is the v1 prefix for all coordinator routes.
-	RoutePrefixV1 = "/api/v1"
+// SetupOptions is a setup option.
+type SetupOptions func(*setupOptions)
 
-	// RoutePrefixExperimental is the experimental prefix for all coordinator routes.
-	RoutePrefixExperimental = "/api/experimental"
-)
+// WithDBNodeImage sets an option to use an image name and tag for the DB node.
+func WithDBNodeImage(name, tag string) SetupOptions {
+	return func(o *setupOptions) {
+		o.dbNodeImage = dockerImage{name: name, tag: tag}
+	}
+}
+
+// WithCoordinatorImage sets an option to use an image name and tag for the coordinator.
+func WithCoordinatorImage(name, tag string) SetupOptions {
+	return func(o *setupOptions) {
+		o.coordinatorImage = dockerImage{name: name, tag: tag}
+	}
+}
